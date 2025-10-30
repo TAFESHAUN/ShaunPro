@@ -2,6 +2,7 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text, Button, ActivityIndicator } from 'react-native-paper';
 
+//New Change to show some git stuff
 export default function DetailsScreen({ route, navigation }) {
   const { user = 'Guest' } = route.params ?? {};
   const [loading, setLoading] = React.useState(false);
