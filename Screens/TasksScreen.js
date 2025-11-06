@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import {Text} from 'react-native-paper';
+import {Text, List, Divider} from 'react-native-paper';
 
 //*SECTION - Task Screen Page
 export default function TasksScreen() {
@@ -8,15 +8,26 @@ export default function TasksScreen() {
     const [tasks, setTasks] = React.useState([
         { id: 1, text: 'Finish assessment'},
         { id: 2, text: "Review git commits"},
+        { id: 3, text: "Test add new task"},
     ]);
 
     return(
         <View style={styles.container}>
             <Text variant='headlineMedium' styles={styles.marg16}>
-                Tasks Heading Placeholder</Text>
-            <Text>
-                Lets put the task list here
-            </Text>
+                Tasks List</Text>
+            <List.Section>
+                {tasks.length === 0 && <Text>No Tasks Added</Text>}
+                {tasks.map((item, index) => (
+                    <View key={item.id}>
+                        <List.Item 
+                            title={item.text}
+                            left={props => <List.Icon {...props} icon="checkbox-blank-circle-outline" />}
+                            accessibilityLabel={`Task ${item.text}`}
+                        />
+                        {index < tasks.length - 1 && <Divider style={styles.marg16}/>}
+                    </View>
+                ))}
+            </List.Section>
         </View>
     );
 }
