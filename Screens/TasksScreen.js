@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import {Text, List, Divider, TextInput, Button} from 'react-native-paper';
+import {Text, List, Divider, TextInput, Button, IconButton} from 'react-native-paper';
 
 //*SECTION - Task Screen Page
 export default function TasksScreen() {
@@ -57,7 +57,16 @@ export default function TasksScreen() {
                             title={item.text}
                             left={props => <List.Icon {...props} icon="checkbox-blank-circle-outline" />}
                             accessibilityLabel={`Task ${item.text}`}
+                            right={(props) => (
+                                <IconButton
+                                    {...props}
+                                    icon="delete-outline"
+                                    onPress={() => setTasks((prev) => prev.filter((t) => t.id !== item.id))
+                                    }
+                                />
+                            )}
                         />
+
                         {index < tasks.length - 1 && <Divider style={styles.marg16}/>}
                     </View>
                 ))}
