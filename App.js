@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from './Screens/HomeScreen';
 import SettingsScreen from './Screens/SettingsScreen';
 import DetailsScreen from './Screens/DetailsScreen';
+import TasksScreen from './Screens/TasksScreen';
 
 //ANCHOR - Primary Nav Approach
 const Tab = createBottomTabNavigator();
@@ -34,6 +35,7 @@ function Tabs() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Tasks" component={TasksScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
