@@ -13,6 +13,7 @@ export default function TasksScreen() {
 
     //ANCHOR - Task Add
     const [taskText, setTaskText] = React.useState('');
+    const [editingId, setEditId] = React.useState(null);
     const addTask = () => {
         const trimmed = taskText.trim();
         if (!trimmed) {
@@ -27,6 +28,38 @@ export default function TasksScreen() {
         setTaskText('');
         //Keyboard.dismiss();
     };
+
+    //ANCHOR - Edit Item
+    const startEdit = (item) => {
+        setEditId(item.id);
+        setTaskText(item.text);
+    }
+
+    // ANCHOR - Validation helper 
+    // TODO - ADD THIS TO THE OTHER VALIDATION
+    const validate = (value) => {
+        const trimmed = value.trim();
+        if (!trimmed) {
+        Alert.alert('Validation', 'Task cannot be empty.');
+        return null;
+        }
+        if (trimmed.length > 30) {
+        Alert.alert('Validation', 'Task must be 30 characters or less.');
+        return null;
+        }
+        return trimmed;
+    };
+
+    //ANCHOR - Update Task
+
+    const updateTask = () => {
+        const trimmed = validate(taskText);
+        if(!trimmed) return; //If they made it empty don't do anything
+        setTasks((prev) => prev.map((t) => (t.id === editingId ? {...t, text: trimmed} : t)))
+        setEditId(null);
+        setTaskText('');
+        //Keyboard dissmiss
+    }
 
     return(
         <View style={styles.container}>
@@ -43,9 +76,15 @@ export default function TasksScreen() {
                     style={styles.input}
                     maxLength={30}
                 />
-                <Button mode="contained" onPress={addTask} accessibilityLabel='Add Task Button'>
-                    Add Task
-                </Button>
+                {editingId ? (
+                    <Button mode="contained" onPress={updateTask} accessibilityLabel='Update Task Button'>
+                        Update Task
+                    </Button>
+                    ) : (
+                    <Button mode="contained" onPress={addTask} accessibilityLabel='Add Task Button'>
+                        Add Task
+                    </Button>
+                )}
             </View>
 
             {/* TASK LIST */}    
@@ -55,7 +94,11 @@ export default function TasksScreen() {
                     <View key={item.id}>
                         <List.Item 
                             title={item.text}
-                            left={props => <List.Icon {...props} icon="checkbox-blank-circle-outline" />}
+                            onPress={() => startEdit(item)}
+                            left={props => 
+                                <IconButton
+                                {...props} 
+                                icon={editingId === item.id ? 'pencil' : 'checkbox-blank-circle-outline'} />}
                             accessibilityLabel={`Task ${item.text}`}
                             right={(props) => (
                                 <IconButton
