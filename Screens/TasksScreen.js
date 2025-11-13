@@ -1,9 +1,17 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import {Text, List, Divider, TextInput, Button, IconButton} from 'react-native-paper';
+import {Text, List, Divider, TextInput, Button, IconButton, ActivityIndicator, Snackbar} from 'react-native-paper';
+
+const JSON_URL = 'https://tafeshaun.github.io/RemoteData/tasks.json';
 
 //*SECTION - Task Screen Page
 export default function TasksScreen() {
+    //NOTE - REMOTE DATA test
+    const [remoteTasks, setRemoteTasks] = React.useState([]);
+    const [loading, setLoading] = React.useState(false);
+    const [errorMsg, setErrorMsg] = React.useState('');
+    const [snack, setSnack] = React.useState('');
+    
     //NOTE - MOCK DATA START
     const [tasks, setTasks] = React.useState([
         { id: 1, text: 'Finish assessment'},
@@ -51,7 +59,6 @@ export default function TasksScreen() {
     };
 
     //ANCHOR - Update Task
-
     const updateTask = () => {
         const trimmed = validate(taskText);
         if(!trimmed) return; //If they made it empty don't do anything
@@ -61,6 +68,38 @@ export default function TasksScreen() {
         //Keyboard dissmiss
     }
 
+    //ANCHOR - Load Remote data into our APP from the JSON file on gitpages
+    const loadRemote = React.useCallback(async () => {
+        try {
+            setLoading(true);
+            setErrorMsg('')
+            const request = await fetch(JSON_URL, {cache: 'no-store'})
+            if(!request.ok) throw new Error(`HTTP ${request.status}`);
+            const jsonReq = await request.json();
+            const arrReq = Array.isArray(jsonReq) ? jsonReq : [];
+            console.log(jsonReq); 
+            //SEARCH HERE?
+        }
+        catch (e) {
+            console.error(e);
+            setErrorMsg('USER YOUR APP FAILED: Failed to load remote data');
+        }
+        finally {
+            setLoading(false);
+        }
+    }, 
+    []);
+    
+    //TEST FETCH on start
+    React.useEffect(() => {
+        loadRemote();
+    },
+    [loadRemote]);
+
+    //NOTE - Merge local and remote data
+
+
+    //ANCHOR - UI Return Section
     return(
         <View style={styles.container}>
             <Text variant='headlineMedium' styles={styles.marg16}>
